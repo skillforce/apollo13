@@ -1,0 +1,97 @@
+---
+import { t, type Lang } from '../i18n/utils';
+import IconClock from './icons/IconClock.astro';
+import IconWallet from './icons/IconWallet.astro';
+import IconFlame from './icons/IconFlame.astro';
+import IconPin from './icons/IconPin.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+
+const Icons = [IconClock, IconWallet, IconFlame, IconPin] as const;
+---
+
+<section class="section" id="benefits">
+  <div class="container">
+    <header class="head">
+      <span class="eyebrow">{tr.benefits.eyebrow}</span>
+      <h2 class="section-title">{tr.benefits.title}</h2>
+    </header>
+
+    <div class="grid">
+      {tr.benefits.items.map((item, i) => {
+        const Icon = Icons[i] ?? Icons[0];
+        return (
+          <article class="card benefit">
+            <div class="icon" aria-hidden="true"><Icon /></div>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .head { display: flex; flex-direction: column; gap: 0; margin-bottom: 48px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .benefit {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .benefit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 60% at 50% -10%, rgba(255, 122, 24, 0.10), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .benefit:hover::before { opacity: 1; }
+
+  .icon {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: var(--accent);
+    background: var(--accent-glow-soft);
+    border: 1px solid rgba(255, 122, 24, 0.28);
+    box-shadow: 0 0 24px -6px var(--accent-glow);
+  }
+
+  .icon :global(svg) { width: 24px; height: 24px; }
+
+  .benefit h3 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .benefit p {
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+</style>

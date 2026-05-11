@@ -1,0 +1,204 @@
+---
+import { t, type Lang } from '../i18n/utils';
+import { PHONE_E164, MAP_URL } from '../i18n/ui';
+import IconArrowRight from './icons/IconArrowRight.astro';
+import IconPhone from './icons/IconPhone.astro';
+import IconPin from './icons/IconPin.astro';
+import IconCalendar from './icons/IconCalendar.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+---
+
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-card">
+      <div class="left">
+        <span class="eyebrow">{tr.contact.eyebrow}</span>
+        <h2 class="section-title">{tr.contact.title}</h2>
+        <p class="contact-text">{tr.contact.text}</p>
+
+        <div class="ctas">
+          <a class="btn" href={`tel:${PHONE_E164}`}>
+            <IconPhone />
+            {tr.contact.ctaCall}
+          </a>
+          <a class="btn btn-ghost" href={MAP_URL} target="_blank" rel="noopener noreferrer">
+            {tr.contact.mapLabel}
+            <IconArrowRight />
+          </a>
+        </div>
+
+        <div class="trust">
+          <span class="trust-dot" aria-hidden="true"></span>
+          <span>{tr.contact.trust}</span>
+        </div>
+      </div>
+
+      <ul class="info">
+        <li>
+          <span class="iwrap"><IconPin /></span>
+          <div>
+            <span class="ilabel">{tr.hero.labels.address}</span>
+            <a class="ivalue" href={MAP_URL} target="_blank" rel="noopener noreferrer">{tr.contact.address}</a>
+          </div>
+        </li>
+        <li>
+          <span class="iwrap"><IconCalendar /></span>
+          <div>
+            <span class="ilabel">{tr.contact.hoursTitle}</span>
+            <span class="ivalue">
+              {tr.contact.hoursWeek}<br />
+              {tr.contact.hoursWeekend}
+            </span>
+          </div>
+        </li>
+        <li>
+          <span class="iwrap"><IconPhone /></span>
+          <div>
+            <span class="ilabel">{tr.contact.phoneLabel}</span>
+            <a class="ivalue ivalue-link" href={`tel:${PHONE_E164}`}>{tr.hero.quickInfo.phone}</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 36px;
+    padding: 48px;
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(80% 60% at 0% 0%, rgba(255, 122, 24, 0.12), transparent 60%),
+      linear-gradient(180deg, #15151a 0%, #101015 100%);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 122, 24, 0.06) inset;
+    overflow: hidden;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(255, 122, 24, 0.25), rgba(255, 122, 24, 0) 50%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (max-width: 920px) {
+    .contact-card { grid-template-columns: 1fr; padding: 32px; gap: 28px; }
+  }
+  @media (max-width: 520px) {
+    .contact-card { padding: 24px; }
+  }
+
+  .left { display: flex; flex-direction: column; }
+  .left .section-title { margin-top: 16px; }
+
+  .contact-text {
+    margin-top: 16px;
+    color: var(--text-muted);
+    max-width: 480px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .ctas {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .ctas :global(svg) { width: 18px; height: 18px; }
+
+  .trust {
+    margin-top: 26px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+
+  .trust-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent-glow);
+    animation: pulse 2.4s infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--accent-glow); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 122, 24, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 122, 24, 0); }
+  }
+
+  .info {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-self: stretch;
+  }
+
+  .info li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.22s ease, background 0.22s ease;
+  }
+  .info li:hover { border-color: rgba(255, 122, 24, 0.35); background: rgba(255, 122, 24, 0.04); }
+
+  .iwrap {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--accent-glow-soft);
+    border: 1px solid rgba(255, 122, 24, 0.28);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+  .iwrap :global(svg) { width: 20px; height: 20px; }
+
+  .ilabel {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-dim);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .ivalue {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.45;
+  }
+  .ivalue-link, a.ivalue {
+    transition: color 0.18s ease;
+  }
+  a.ivalue:hover { color: var(--accent); }
+</style>

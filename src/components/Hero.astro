@@ -1,0 +1,409 @@
+---
+import { t, type Lang } from '../i18n/utils';
+import { PHONE_E164 } from '../i18n/ui';
+import IconArrowRight from './icons/IconArrowRight.astro';
+import IconPhone from './icons/IconPhone.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+---
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/hero-bg-poster.jpg"
+    >
+      <source src="/hero-bg-mobile.mp4" type="video/mp4" media="(max-width: 720px)" />
+      <source src="/hero-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-bg-tint"></div>
+    <div class="hero-bg-vignette"></div>
+  </div>
+
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <span class="eyebrow">
+        <span class="pulse" aria-hidden="true"></span>
+        {tr.hero.badge}
+      </span>
+
+      <h1 class="hero-title">
+        {tr.hero.title} <span class="accent">{tr.hero.titleAccent}</span>
+      </h1>
+
+      <p class="hero-sub">{tr.hero.subtitle}</p>
+
+      <div class="hero-ctas">
+        <a class="btn" href="#contact">
+          {tr.hero.ctaBook}
+          <IconArrowRight />
+        </a>
+        <a class="btn btn-ghost" href={`tel:${PHONE_E164}`}>
+          <IconPhone />
+          {tr.hero.ctaCall}
+        </a>
+      </div>
+
+      <ul class="hero-quick">
+        <li>
+          <span class="qlabel">{tr.hero.labels.address}</span>
+          <span class="qvalue">{tr.hero.quickInfo.address}</span>
+        </li>
+        <li>
+          <span class="qlabel">{tr.hero.labels.hours}</span>
+          <span class="qvalue">
+            {tr.hero.quickInfo.hoursWeek}<br />
+            {tr.hero.quickInfo.hoursWeekend}
+          </span>
+        </li>
+        <li>
+          <span class="qlabel">{tr.hero.labels.phone}</span>
+          <a class="qvalue qphone" href={`tel:${PHONE_E164}`}>{tr.hero.quickInfo.phone}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-float">
+        <div class="visual-card" id="logo-3d-card">
+          <img src="/logo_3D.avif" alt="" width="2048" height="2048" loading="eager" decoding="async" />
+          <div class="visual-shine" id="logo-shine"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const card = document.getElementById('logo-3d-card') as HTMLElement | null;
+  const shine = document.getElementById('logo-shine') as HTMLElement | null;
+  if (card && shine) {
+    let raf: number | null = null;
+    let rx = 0, ry = 0, trx = 0, tryy = 0;
+
+    function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+
+    function tick() {
+      rx = lerp(rx, trx, 0.12);
+      ry = lerp(ry, tryy, 0.12);
+      card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      if (Math.abs(rx - trx) > 0.04 || Math.abs(ry - tryy) > 0.04) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        card.style.transform = `rotateX(${trx}deg) rotateY(${tryy}deg)`;
+        raf = null;
+      }
+    }
+
+    function startAnim() { if (!raf) raf = requestAnimationFrame(tick); }
+
+    function applyTilt(x: number, y: number) {
+      const r = card.getBoundingClientRect();
+      const dx = (x - r.left - r.width / 2) / (r.width / 2);
+      const dy = (y - r.top - r.height / 2) / (r.height / 2);
+      trx = -dy * 18;
+      tryy = dx * 18;
+      shine.style.setProperty('--sx', `${((x - r.left) / r.width * 100).toFixed(1)}%`);
+      shine.style.setProperty('--sy', `${((y - r.top) / r.height * 100).toFixed(1)}%`);
+      startAnim();
+    }
+
+    card.addEventListener('mousemove', e => applyTilt(e.clientX, e.clientY));
+    card.addEventListener('mouseleave', () => { trx = 0; tryy = 0; startAnim(); });
+    card.addEventListener('touchmove', e => {
+      e.preventDefault();
+      applyTilt(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+    card.addEventListener('touchend', () => { trx = 0; tryy = 0; startAnim(); });
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    padding: 120px 0;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 720px) {
+    .hero { padding: 80px 0 72px; }
+  }
+
+  .hero-inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  @media (max-width: 960px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 18px; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Video background */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.55;
+    transform: scale(1.02);
+  }
+
+  /* Dim the video so text stays legible — heavier on the left where copy sits */
+  .hero-bg-tint {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(10, 10, 12, 0.55) 0%,
+        rgba(10, 10, 12, 0.35) 35%,
+        rgba(10, 10, 12, 0.7) 100%
+      ),
+      linear-gradient(90deg,
+        rgba(10, 10, 12, 0.85) 0%,
+        rgba(10, 10, 12, 0.55) 40%,
+        rgba(10, 10, 12, 0.2) 100%
+      );
+  }
+
+  @media (max-width: 720px) {
+    .hero-bg-tint {
+      background:
+        linear-gradient(180deg,
+          rgba(10, 10, 12, 0.55) 0%,
+          rgba(10, 10, 12, 0.45) 30%,
+          rgba(10, 10, 12, 0.85) 100%
+        );
+    }
+  }
+
+  .hero-bg-vignette {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(80% 60% at 50% 110%, rgba(255, 122, 24, 0.18), transparent 60%),
+      radial-gradient(70% 50% at 0% 0%, rgba(0, 0, 0, 0.5), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Cellular data savings + accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video { display: none; }
+    .hero-bg {
+      background:
+        #000 url('/hero-bg-poster.jpg') center/cover no-repeat;
+    }
+  }
+
+  @media (prefers-reduced-data: reduce) {
+    .hero-video { display: none; }
+    .hero-bg {
+      background:
+        #000 url('/hero-bg-poster.jpg') center/cover no-repeat;
+    }
+  }
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent-glow);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--accent-glow); }
+    70% { box-shadow: 0 0 0 12px rgba(255, 122, 24, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 122, 24, 0); }
+  }
+
+  .hero-title {
+    font-size: clamp(40px, 7vw, 80px);
+    margin-top: 22px;
+    letter-spacing: -0.035em;
+  }
+
+  .hero-title .accent {
+    color: var(--accent);
+    text-shadow: 0 0 60px var(--accent-glow);
+    background: linear-gradient(180deg, #ff9a4d, #ff7a18 70%, #e25a00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    margin-top: 22px;
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.6;
+  }
+
+  .hero-ctas {
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-quick {
+    list-style: none;
+    margin: 44px 0 0;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-soft) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  @media (max-width: 720px) {
+    .hero-quick { grid-template-columns: 1fr; gap: 14px; padding: 20px; }
+  }
+
+  .hero-quick li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .hero-quick li + li {
+    padding-left: 18px;
+    border-left: 1px solid var(--border);
+  }
+
+  @media (max-width: 720px) {
+    .hero-quick li + li {
+      padding-left: 0;
+      padding-top: 14px;
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+  }
+
+  .qlabel {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .qvalue { color: var(--text); font-size: 14.5px; font-weight: 500; line-height: 1.45; }
+  .qphone { color: var(--text); transition: color 0.18s ease; white-space: nowrap; }
+  .qphone:hover { color: var(--accent); }
+
+  .btn :global(svg) { width: 18px; height: 18px; }
+
+  /* Pull the quick-info card forward on the dark video so it stays legible */
+  .hero-quick {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    background: linear-gradient(180deg, rgba(21, 21, 26, 0.78) 0%, rgba(15, 15, 19, 0.78) 100%);
+    border-color: var(--border-strong);
+  }
+
+  /* 3D logo visual */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+  }
+
+  @media (max-width: 960px) {
+    .hero-visual { order: -1; }
+  }
+
+  .visual-float {
+    perspective: 900px;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .visual-float { animation: none; }
+  }
+
+  .visual-card {
+    position: relative;
+    width: min(420px, 90vw);
+    aspect-ratio: 1;
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: grab;
+  }
+
+  @media (max-width: 720px) {
+    .visual-card { width: min(260px, 55vw); }
+  }
+
+  .visual-card:active { cursor: grabbing; }
+
+  .visual-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: none;
+    transition: filter 0.3s ease;
+  }
+
+  .visual-card:hover img {
+    filter:
+      drop-shadow(0 28px 70px rgba(0, 0, 0, 0.8))
+      drop-shadow(0 0 60px rgba(255, 122, 24, 0.38));
+  }
+
+  .visual-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      50% 40% at var(--sx, 50%) var(--sy, 20%),
+      rgba(255, 255, 255, 0.14),
+      transparent 70%
+    );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .visual-card:hover .visual-shine { opacity: 1; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import { t, type Lang } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="dot" aria-hidden="true"></span>
+      <span>{tr.brand.name}</span>
+      <span class="sep">·</span>
+      <span class="muted">{tr.brand.tagline}</span>
+    </div>
+    <div class="footer-meta">
+      <span>© {year} {tr.brand.name}. {tr.footer.rights}.</span>
+      <span class="sep">·</span>
+      <span class="muted">{tr.footer.crafted}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    margin-top: 40px;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .footer-brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--text); }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .sep { color: var(--text-dim); }
+  .muted { color: var(--text-muted); font-weight: 400; }
+</style>

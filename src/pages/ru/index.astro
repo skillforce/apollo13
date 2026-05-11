@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Benefits from '../../components/Benefits.astro';
+import Pricing from '../../components/Pricing.astro';
+import Contact from '../../components/Contact.astro';
+
+const lang = 'ru' as const;
+---
+
+<Layout>
+  <Hero lang={lang} />
+  <Benefits lang={lang} />
+  <Pricing lang={lang} />
+  <Contact lang={lang} />
+</Layout>

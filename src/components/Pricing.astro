@@ -1,0 +1,312 @@
+---
+import { t, type Lang } from '../i18n/utils';
+import IconCheck from './icons/IconCheck.astro';
+import IconSpark from './icons/IconSpark.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+
+const planBlocks = [
+  {
+    key: 'visits',
+    title: tr.pricing.plansVisitsTitle,
+    note: tr.pricing.plansVisitsNote,
+    plans: tr.pricing.plansVisits,
+    highlight: false,
+  },
+  {
+    key: 'unlimited',
+    title: tr.pricing.plansUnlimitedTitle,
+    note: tr.pricing.plansUnlimitedNote,
+    plans: tr.pricing.plansUnlimited,
+    highlight: true,
+  },
+] as const;
+---
+
+<section class="section" id="pricing">
+  <div class="container">
+    <header class="head">
+      <span class="eyebrow">{tr.pricing.eyebrow}</span>
+      <h2 class="section-title">{tr.pricing.title}</h2>
+      <p class="section-subtitle">{tr.pricing.subtitle}</p>
+    </header>
+
+    <div class="layout">
+      <div class="single">
+        <div class="single-head">
+          <h3 class="block-title">{tr.pricing.singleTitle}</h3>
+          <p class="block-note">{tr.pricing.singleNote}</p>
+        </div>
+
+        <div class="table" role="table" aria-label={tr.pricing.singleTitle}>
+          <div class="thead" role="row">
+            <div role="columnheader">{tr.pricing.table.period}</div>
+            <div role="columnheader" class="num">{tr.pricing.table.before}</div>
+            <div role="columnheader" class="num">{tr.pricing.table.after}</div>
+          </div>
+          {tr.pricing.slots.map((s) => {
+            const sameAllDay = s.before === s.after;
+            return (
+              <div class="trow" role="row">
+                <div role="cell" class="day">{s.name}</div>
+                {sameAllDay ? (
+                  <div role="cell" class="num num-span">
+                    <span class="amount">{s.before}</span>
+                    <span class="cur">{tr.pricing.table.currency}</span>
+                    <span class="all-day">· {tr.pricing.table.allDay}</span>
+                  </div>
+                ) : (
+                  <>
+                    <div role="cell" class="num">
+                      <span class="amount">{s.before}</span>
+                      <span class="cur">{tr.pricing.table.currency}</span>
+                    </div>
+                    <div role="cell" class="num">
+                      <span class="amount">{s.after}</span>
+                      <span class="cur">{tr.pricing.table.currency}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div class="plans">
+        {planBlocks.map((block) => (
+          <div class={`plan-block${block.highlight ? ' plan-block-hi' : ''}`}>
+            <div class="plan-block-head">
+              <h3 class="block-title">{block.title}</h3>
+              <p class="block-note">{block.note}</p>
+            </div>
+            <ul class="plans-list">
+              {block.plans.map((p) => (
+                <li class={`plan${p.badge ? ' plan-hi' : ''}`}>
+                  <div class="plan-title">
+                    <IconCheck class="check" />
+                    <span>{p.title}</span>
+                  </div>
+                  <div class="plan-meta">
+                    {p.badge && (
+                      <span class="badge">
+                        <IconSpark />
+                        {p.badge}
+                      </span>
+                    )}
+                    <span class="price">{p.price}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .head { display: flex; flex-direction: column; margin-bottom: 48px; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 22px;
+    align-items: start;
+  }
+
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .block-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .block-note {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* Single visits — compact 2-row table */
+  .single {
+    background: linear-gradient(180deg, #0e0e12 0%, #0a0a0e 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .single-head { margin-bottom: 16px; }
+
+  .table { display: flex; flex-direction: column; }
+
+  .thead, .trow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .thead {
+    padding: 10px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trow {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .trow:last-child { border-bottom: 0; }
+
+  .day { font-size: 15px; font-weight: 600; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .num-span { grid-column: 2 / 4; }
+
+  .amount {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+  }
+  .cur {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+  }
+  .all-day {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-left: 8px;
+  }
+
+  /* Plans — split into two blocks */
+  .plans {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .plan-block {
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-soft) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.25s ease;
+  }
+
+  .plan-block-hi {
+    border-color: rgba(255, 122, 24, 0.35);
+    box-shadow: var(--shadow-card), 0 16px 50px -22px var(--accent-glow);
+  }
+
+  .plan-block-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .plan-block-head .block-note {
+    margin: 0;
+    text-align: right;
+  }
+
+  @media (max-width: 480px) {
+    .plan-block-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .plan-block-head .block-note { text-align: left; }
+  }
+
+  .plans-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .plan {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+
+  .plan:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 122, 24, 0.45);
+    background: rgba(255, 122, 24, 0.04);
+  }
+
+  .plan-hi {
+    border-color: rgba(255, 122, 24, 0.45);
+    background: rgba(255, 122, 24, 0.06);
+  }
+
+  .plan-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    min-width: 0;
+  }
+
+  .plan-title :global(svg.check) {
+    width: 16px; height: 16px;
+    color: var(--accent);
+    flex: 0 0 auto;
+  }
+
+  .plan-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #0a0a0c;
+    background: var(--accent);
+    padding: 4px 8px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px -3px var(--accent-glow);
+  }
+  .badge :global(svg) { width: 11px; height: 11px; }
+
+  .price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
