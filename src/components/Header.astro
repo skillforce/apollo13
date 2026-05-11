@@ -15,7 +15,7 @@ const tr = t(lang);
 <header class="site-header" aria-label="Site header">
   <div class="header-inner">
 
-    <a class="glass-pill pill-brand" href={lang === 'be' ? '/' : '/ru/'} aria-label={tr.brand.name}>
+    <div class="glass-pill pill-brand"  aria-label={tr.brand.name}>
       <span class="brand-logo">
         <picture>
           <source srcset="/logo.avif" type="image/avif" />
@@ -26,7 +26,7 @@ const tr = t(lang);
         <span class="brand-name">{tr.brand.name}</span>
         <span class="brand-tagline">{tr.brand.tagline}</span>
       </span>
-    </a>
+    </div>
 
     <nav class="glass-pill pill-nav" aria-label="Main navigation">
       <a href="#benefits">{tr.nav.benefits}</a>
@@ -108,7 +108,6 @@ const tr = t(lang);
     pointer-events: none;
   }
 
-  /* ── Brand pill ──────────────────────────────────────── */
   .pill-brand {
     gap: 10px;
     padding: 7px 16px 7px 7px;
@@ -121,6 +120,7 @@ const tr = t(lang);
       0 0 0 1px rgba(255, 122, 24, 0.1),
       0 0 28px -6px rgba(255, 122, 24, 0.22);
     transition: box-shadow 0.25s ease;
+    cursor: default;
   }
 
   .pill-brand:hover {
