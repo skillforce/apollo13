@@ -3,7 +3,7 @@ export const languages = {
   ru: 'RU',
 } as const;
 
-export const defaultLang = 'be' as const;
+export const defaultLang = 'ru' as const;
 
 export type Lang = keyof typeof languages;
 
