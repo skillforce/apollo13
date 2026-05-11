@@ -19,7 +19,9 @@ const tr = t(lang);
       preload="metadata"
       poster="/hero-bg-poster.jpg"
     >
+      <source src="/hero-bg-mobile.webm" type="video/webm" media="(max-width: 720px)" />
       <source src="/hero-bg-mobile.mp4" type="video/mp4" media="(max-width: 720px)" />
+      <source src="/hero-bg.webm" type="video/webm" />
       <source src="/hero-bg.mp4" type="video/mp4" />
     </video>
     <div class="hero-bg-tint"></div>
@@ -72,7 +74,7 @@ const tr = t(lang);
     <div class="hero-visual" aria-hidden="true">
       <div class="visual-float">
         <div class="visual-card" id="logo-3d-card">
-          <img src="/logo_3D.avif" alt="" width="2048" height="2048" loading="eager" decoding="async" />
+          <img src="/logo_3D.avif" alt="" width="840" height="840" loading="eager" decoding="async" />
           <div class="visual-shine" id="logo-shine"></div>
         </div>
       </div>
