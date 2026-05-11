@@ -2,7 +2,7 @@ import { defaultLang, ui, type Lang } from './ui';
 
 export function getLangFromUrl(url: URL): Lang {
   const [, segment] = url.pathname.split('/');
-  if (segment === 'ru') return 'ru';
+  if (segment === 'be') return 'be';
   return defaultLang;
 }
 
@@ -19,5 +19,5 @@ export function localizedPath(lang: Lang, path = ''): string {
 }
 
 export function alternateLang(lang: Lang): Lang {
-  return lang === 'be' ? 'ru' : 'be';
+  return lang === 'ru' ? 'be' : 'ru';
 }

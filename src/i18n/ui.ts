@@ -102,7 +102,7 @@ const slots = (weekday: string, weekend: string): Slot[] => [
 
 export const ui: Record<Lang, UI> = {
   be: {
-    htmlLang: 'BY',
+    htmlLang: 'by',
     langName: 'Беларуская',
     meta: {
       title: 'Apolon 13 — фітнес-клуб у Магілёве',

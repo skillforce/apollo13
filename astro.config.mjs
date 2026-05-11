@@ -4,8 +4,8 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://apollo13.vpaname.cc',
   i18n: {
-    defaultLocale: 'be',
-    locales: ['be', 'ru'],
+    defaultLocale: 'ru',
+    locales: ['ru', 'be'],
     routing: {
       prefixDefaultLocale: false,
     },
