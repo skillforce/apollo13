@@ -1,0 +1,59 @@
+---
+import { t, type Lang } from '../i18n/utils';
+import Eyebrow from './Eyebrow.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = t(lang);
+---
+
+<section class="section" id="tour">
+  <div class="container">
+    <header class="head">
+      <Eyebrow text={tr.tour.eyebrow} />
+      <h2 class="section-title">{tr.tour.title}</h2>
+      <p class="section-subtitle">{tr.tour.subtitle}</p>
+    </header>
+
+    <div class="frame-wrap">
+      <iframe
+        src="https://yandex.com/map-widget/v1/?l=stv%2Csta&ll=30.264447%2C53.929600&panorama%5Bdirection%5D=228.677016%2C-4.196088&panorama%5Bfull%5D=true&panorama%5Bpoint%5D=30.264640%2C53.929415&panorama%5Bspan%5D=108.214043%2C60.000000&z=19.48"
+        title={tr.tour.title}
+        loading="lazy"
+        allowfullscreen
+        frameborder="0"
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 36px;
+  }
+
+  .frame-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-card), 0 24px 80px -24px rgba(0, 0, 0, 0.6);
+  }
+
+  @media (max-width: 720px) {
+    .frame-wrap { aspect-ratio: 4 / 3; }
+  }
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+</style>

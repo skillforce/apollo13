@@ -77,12 +77,12 @@ img { display: block; max-width: 100%; }
 }
 
 .section {
-  padding: 96px 0;
+  padding: 40px 0;
   position: relative;
 }
 
 @media (max-width: 720px) {
-  .section { padding: 64px 0; }
+  .section { padding: 24px 0; }
 }
 
 .eyebrow {

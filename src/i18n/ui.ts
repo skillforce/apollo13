@@ -20,6 +20,7 @@ export type UI = {
   };
   nav: {
     benefits: string;
+    tour: string;
     pricing: string;
     contact: string;
   };
@@ -72,6 +73,11 @@ export type UI = {
     plansUnlimitedNote: string;
     plansUnlimited: Plan[];
   };
+  tour: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+  };
   contact: {
     eyebrow: string;
     title: string;
@@ -111,6 +117,7 @@ export const ui: Record<Lang, UI> = {
     },
     nav: {
       benefits: 'Перавагі',
+      tour: '360° тур',
       pricing: 'Кошты',
       contact: 'Кантакты',
     },
@@ -188,6 +195,11 @@ export const ui: Record<Lang, UI> = {
         { title: '1 месяц · пары', price: '140 р' },
       ],
     },
+    tour: {
+      eyebrow: 'Зазірні ўнутр',
+      title: 'Віртуальны тур па зале',
+      subtitle: 'Паглядзі на зал вачыма наведвальніка — сферычная панарама прама ў браузеры.',
+    },
     contact: {
       eyebrow: 'Кантакты',
       title: 'Чакаем цябе на трэніроўцы',
@@ -220,6 +232,7 @@ export const ui: Record<Lang, UI> = {
     },
     nav: {
       benefits: 'Преимущества',
+      tour: '360° тур',
       pricing: 'Цены',
       contact: 'Контакты',
     },
@@ -296,6 +309,11 @@ export const ui: Record<Lang, UI> = {
         { title: '3 месяца', price: '170 р', badge: 'Выгодно' },
         { title: '1 месяц · пары', price: '140 р' },
       ],
+    },
+    tour: {
+      eyebrow: 'Загляни внутрь',
+      title: 'Виртуальный тур по залу',
+      subtitle: 'Посмотри на зал глазами посетителя — сферическая панорама прямо в браузере.',
     },
     contact: {
       eyebrow: 'Контакты',

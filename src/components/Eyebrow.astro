@@ -1,0 +1,128 @@
+---
+interface Props { text: string }
+const { text } = Astro.props;
+---
+
+<div class="rocket-badge">
+  <div class="rocket-icon" aria-hidden="true">
+    <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="eyebrow-flame-grad">
+          <stop offset="0%" stop-color="#fff"/>
+          <stop offset="40%" stop-color="#ff0"/>
+          <stop offset="80%" stop-color="#ff5a00"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+      <g class="rocket">
+        <rect x="30" y="20" width="50" height="20" rx="10" fill="#ff7a18"/>
+        <polygon points="80,20 105,30 80,40" fill="#ff9a3c"/>
+        <circle cx="50" cy="30" r="5" fill="#1a1a1a"/>
+        <polygon points="30,20 20,10 30,30" fill="#d94f00"/>
+        <polygon points="30,40 20,50 30,30" fill="#d94f00"/>
+      </g>
+      <g class="flame">
+        <ellipse cx="20" cy="30" rx="10" ry="6" fill="url(#eyebrow-flame-grad)"/>
+      </g>
+    </svg>
+  </div>
+  <span class="rocket-text">{text}</span>
+  <div class="particles" aria-hidden="true"></div>
+</div>
+
+<style>
+  .rocket-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2a0f05, #5a1f08);
+    color: #ff7a18;
+    font-weight: 600;
+    letter-spacing: 2px;
+    overflow: hidden;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .rocket-icon {
+    width: 80px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .rocket-text {
+    font-size: 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .rocket {
+    transform-origin: center;
+    animation: rocketShake 0.2s infinite;
+  }
+
+  .flame {
+    transform-origin: 20px 30px;
+    animation: flamePulse 0.15s infinite;
+    filter: blur(2px);
+  }
+
+  .particles {
+    position: static;
+  }
+
+  .particles::before,
+  .particles::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    background: orange;
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  .particles::before { animation: particle 1s linear infinite; }
+  .particles::after  { animation: particle 1s linear infinite 0.5s; }
+
+  .rocket-badge:hover {
+    transform: translateX(6px);
+    transition: transform 0.3s ease;
+  }
+
+  .rocket-badge:hover .flame {
+    transform: scaleX(1.8);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-2px); }
+  }
+
+  @keyframes rocketShake {
+    0%, 100% { transform: translateX(0); }
+    50%       { transform: translateX(1px); }
+  }
+
+  @keyframes flamePulse {
+    0%, 100% { transform: scaleX(1);   opacity: 0.8; }
+    50%       { transform: scaleX(1.4); opacity: 1; }
+  }
+
+  @keyframes particle {
+    0%   { transform: translate(0, -50%);    opacity: 0.8; }
+    100% { transform: translate(-40px, -50%); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rocket-badge,
+    .rocket,
+    .flame,
+    .particles::before,
+    .particles::after { animation: none; }
+  }
+</style>

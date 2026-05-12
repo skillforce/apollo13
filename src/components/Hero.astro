@@ -11,19 +11,15 @@ const tr = t(lang);
 <section class="hero">
   <div class="hero-bg" aria-hidden="true">
     <video
+      id="hero-video"
       class="hero-video"
       autoplay
       muted
       loop
       playsinline
-      preload="metadata"
-      poster="/hero-bg-poster.jpg"
-    >
-      <source src="/hero-bg-mobile.webm" type="video/webm" media="(max-width: 720px)" />
-      <source src="/hero-bg-mobile.mp4" type="video/mp4" media="(max-width: 720px)" />
-      <source src="/hero-bg.webm" type="video/webm" />
-      <source src="/hero-bg.mp4" type="video/mp4" />
-    </video>
+      preload="none"
+      poster="/hero-bg-poster.avif"
+    />
     <div class="hero-bg-tint"></div>
     <div class="hero-bg-vignette"></div>
   </div>
@@ -59,9 +55,9 @@ const tr = t(lang);
         </li>
         <li>
           <span class="qlabel">{tr.hero.labels.hours}</span>
-          <span class="qvalue">
-            {tr.hero.quickInfo.hoursWeek}<br />
-            {tr.hero.quickInfo.hoursWeekend}
+          <span class="qvalue qvalue-hours">
+            <span>{tr.hero.quickInfo.hoursWeek}</span>
+            <span>{tr.hero.quickInfo.hoursWeekend}</span>
           </span>
         </li>
         <li>
@@ -83,6 +79,38 @@ const tr = t(lang);
 </section>
 
 <script>
+  // Lazy-load hero video after idle — skipped for data-saver and reduced-motion prefs
+  function loadHeroVideo() {
+    const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+    if (!video) return;
+
+    const conn = (navigator as any).connection;
+    const saveData = conn?.saveData || conn?.effectiveType === 'slow-2g' || conn?.effectiveType === '2g';
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reducedData = matchMedia('(prefers-reduced-data: reduce)').matches;
+
+    if (saveData || reducedMotion || reducedData) return;
+
+    const isMobile = matchMedia('(max-width: 720px)').matches;
+    const sources: [string, string][] = isMobile
+      ? [['video/webm; codecs=av01', '/hero-bg-mobile.webm'], ['video/mp4', '/hero-bg-mobile.mp4']]
+      : [['video/webm; codecs=av01', '/hero-bg.webm'], ['video/mp4', '/hero-bg.mp4']];
+
+    for (const [type, src] of sources) {
+      const s = document.createElement('source');
+      s.type = type;
+      s.src = src;
+      video.appendChild(s);
+    }
+    video.load();
+  }
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadHeroVideo, { timeout: 2000 });
+  } else {
+    setTimeout(loadHeroVideo, 200);
+  }
+
   const card = document.getElementById('logo-3d-card') as HTMLElement | null;
   const shine = document.getElementById('logo-shine') as HTMLElement | null;
   if (card && shine) {
@@ -225,7 +253,7 @@ const tr = t(lang);
     .hero-video { display: none; }
     .hero-bg {
       background:
-        #000 url('/hero-bg-poster.jpg') center/cover no-repeat;
+        #000 url('/hero-bg-poster.avif') center/cover no-repeat;
     }
   }
 
@@ -233,7 +261,7 @@ const tr = t(lang);
     .hero-video { display: none; }
     .hero-bg {
       background:
-        #000 url('/hero-bg-poster.jpg') center/cover no-repeat;
+        #000 url('/hero-bg-poster.avif') center/cover no-repeat;
     }
   }
 
@@ -328,6 +356,22 @@ const tr = t(lang);
     font-weight: 600;
   }
   .qvalue { color: var(--text); font-size: 14.5px; font-weight: 500; line-height: 1.45; }
+  .qvalue-hours {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    column-gap: 10px;
+    white-space: nowrap;
+  }
+  .qvalue-hours span {
+    white-space: nowrap;
+  }
+  @media (max-width: 420px) {
+    .qvalue-hours {
+      column-gap: 8px;
+      font-size: 12px;
+    }
+  }
   .qphone { color: var(--text); transition: color 0.18s ease; white-space: nowrap; }
   .qphone:hover { color: var(--accent); }
 

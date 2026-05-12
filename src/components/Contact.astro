@@ -1,6 +1,7 @@
 ---
 import { t, type Lang } from '../i18n/utils';
 import { PHONE_E164, MAP_URL } from '../i18n/ui';
+import Eyebrow from './Eyebrow.astro';
 import IconArrowRight from './icons/IconArrowRight.astro';
 import IconPhone from './icons/IconPhone.astro';
 import IconPin from './icons/IconPin.astro';
@@ -15,7 +16,7 @@ const tr = t(lang);
   <div class="container">
     <div class="contact-card">
       <div class="left">
-        <span class="eyebrow">{tr.contact.eyebrow}</span>
+        <Eyebrow text={tr.contact.eyebrow} />
         <h2 class="section-title">{tr.contact.title}</h2>
         <p class="contact-text">{tr.contact.text}</p>
 
@@ -48,9 +49,9 @@ const tr = t(lang);
           <span class="iwrap"><IconCalendar /></span>
           <div>
             <span class="ilabel">{tr.contact.hoursTitle}</span>
-            <span class="ivalue">
-              {tr.contact.hoursWeek}<br />
-              {tr.contact.hoursWeekend}
+            <span class="ivalue ivalue-hours">
+              <span>{tr.contact.hoursWeek}</span>
+              <span>{tr.contact.hoursWeekend}</span>
             </span>
           </div>
         </li>
@@ -196,6 +197,15 @@ const tr = t(lang);
     color: var(--text);
     font-weight: 500;
     line-height: 1.45;
+  }
+  .ivalue-hours {
+    display: inline-flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  .ivalue-hours span {
+    white-space: nowrap;
   }
   .ivalue-link, a.ivalue {
     transition: color 0.18s ease;

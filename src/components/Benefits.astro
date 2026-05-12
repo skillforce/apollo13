@@ -1,5 +1,6 @@
 ---
 import { t, type Lang } from '../i18n/utils';
+import Eyebrow from './Eyebrow.astro';
 import IconClock from './icons/IconClock.astro';
 import IconWallet from './icons/IconWallet.astro';
 import IconFlame from './icons/IconFlame.astro';
@@ -15,7 +16,7 @@ const Icons = [IconClock, IconWallet, IconFlame, IconPin] as const;
 <section class="section" id="benefits">
   <div class="container">
     <header class="head">
-      <span class="eyebrow">{tr.benefits.eyebrow}</span>
+      <Eyebrow text={tr.benefits.eyebrow} />
       <h2 class="section-title">{tr.benefits.title}</h2>
     </header>
 
